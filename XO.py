@@ -9,20 +9,27 @@ from sys import exit
 def check_status(matrix, ox):
     """
     Проверка ходоф, кто победитель
+    Возвращаемые значения:
+    0 - следующий ход
+    1 - победа
+    2 - ничья
     """
     # Словари для подсчета ходов по диагонали
     diagonal_left = {'11':0, '22':0, '33':0}
     diagonal_right = {'13':0, '22':0, '31':0}
+    nobody_won = 0
     # Проверка по горизонтали
     for y in matrix.items():
         count = 0
         for x in y[1].items():
             count += 1 if x[1] == ox else 0
             # Сбор данных о ходах по диагонали
-            if x[0] in diagonal_left.keys() and x[1] != '-': diagonal_left[x[0]] = 1 
-            if x[0] in diagonal_right.keys() and x[1] != '-': diagonal_right[x[0]] = 1
+            if x[0] in diagonal_left.keys() and x[1] == ox: diagonal_left[x[0]] = 1 
+            if x[0] in diagonal_right.keys() and x[1] == ox: diagonal_right[x[0]] = 1
+            # Подсчет доступных ходов чтобы определить ничью
+            nobody_won += 1 if x[1] == '-' else 0
         if count == 3:
-            return True
+            return 1
     # Проверка по вертикали
     column_count = {}
     for y in matrix.items():
@@ -30,11 +37,14 @@ def check_status(matrix, ox):
             column_count[j[0][1:]] = column_count.setdefault(j[0][1:], 0)
             column_count[j[0][1:]] += 1 if j[1] == ox else 0
         if max(column_count.values()) == 3:
-            return True
+            return 1
     # Проверка по диагонали
-    if sum(diagonal_left.values()) == 3 or sum(diagonal_left.values()) == 3:
-        return True
-    return False
+    if sum(diagonal_left.values()) == 3 or sum(diagonal_right.values()) == 3:
+        return 1
+    # Проверка на ничью
+    if nobody_won == 0:
+        return 2
+    return 0
 
 
 def field():
@@ -63,8 +73,9 @@ def field():
                 print(x, end=f'{" "*5}')
             print('\n')
         # Контроль ходов, кто победил
-        if check_status(fieldMatrix, ox):
-            return 'Victory'
+        result = check_status(fieldMatrix, ox)
+        return 'Victory' if result == 1 else ('Nobody_won' if result == 2 else None)
+
     return draw_field
 
 
@@ -115,9 +126,13 @@ def main():
                 if game_res is False:
                     err = 'Вы не можете сделать ход в это поле!'
                     continue
-                elif game_res is 'Victory':
+                elif game_res == 'Victory':
                     clear_screen()
                     print(f'Победил игрок {ox}!')
+                    exit()
+                elif game_res == 'Nobody_won':
+                    clear_screen()
+                    print(f'Ничья')
                     exit()
             else:
                 err = 'Введите корректное значение!'
