@@ -15,4 +15,5 @@
 ![alt text](step-3.png)
 
 > Также возможна ничья.
+
 ![alt text](step-4.png)
