@@ -136,6 +136,9 @@ def main():
             elif move == 'q':
                 print('Игра прервана!')
                 exit()
+            elif move == 'n':
+                print('Новая игра')
+                main()
             else:
                 err = 'Введите корректное значение!'
                 continue
