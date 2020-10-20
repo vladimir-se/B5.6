@@ -120,20 +120,22 @@ def main():
             например, 12 - первая строка, второй столбец.
             Значение не должно привышать диапазон заданных границ игрового поля - 3x3.
             """
-            if len(move) == 2 and 0 < (int(move[0]) and int(move[1])) < 4:
+            if move.isdigit() and (len(move) == 2 and 0 < (int(move[0]) and int(move[1])) < 4):
                 # Результат хода.
                 game_res = battle_field(move, ox)
                 if game_res is False:
                     err = 'Вы не можете сделать ход в это поле!'
                     continue
-                elif game_res == 'Victory':
-                    clear_screen()
+                elif game_res == 'Victory' :
                     print(f'Победил игрок {ox}!')
                     exit()
                 elif game_res == 'Nobody_won':
-                    clear_screen()
                     print(f'Ничья')
                     exit()
+            # Выход из игры
+            elif move == 'q':
+                print('Игра прервана!')
+                exit()
             else:
                 err = 'Введите корректное значение!'
                 continue
