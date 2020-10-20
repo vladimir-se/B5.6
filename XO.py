@@ -6,7 +6,7 @@ from os import system, name
 from sys import exit
 
 
-def checkStatus(matrix, ox):
+def check_status(matrix, ox):
     """
     Проверка ходоф, кто победитель
     """
@@ -47,7 +47,7 @@ def field():
         2:{'21':'-', '22':'-', '23':'-'},
         3:{'31':'-', '32':'-', '33':'-'}
         }
-    def drawField(cell = 0, ox = '-'):
+    def draw_field(cell = 0, ox = '-'):
         """
         Отметка ходов на игровом поле
         """
@@ -63,12 +63,12 @@ def field():
                 print(x, end=f'{" "*5}')
             print('\n')
         # Контроль ходов, кто победил
-        if checkStatus(fieldMatrix, ox):
+        if check_status(fieldMatrix, ox):
             return 'Victory'
-    return drawField
+    return draw_field
 
 
-def XorO():
+def x_or_o():
     """
     Выбор игрока, который будет ходить
     """
@@ -79,7 +79,7 @@ def XorO():
         yield value
 
 
-def clearScreen():
+def clear_screen():
     """
     Очистка экрана после каждого хода
     """
@@ -94,15 +94,15 @@ def main():
     Основноа
     """
     # Создание игрового поля
-    battleField = field()
+    battle_field = field()
     
     # Ход игры
-    for ox in XorO():
+    for ox in x_or_o():
         err = ''
         while True:
-            clearScreen()
+            clear_screen()
             print(f'{err}\nХод игрока {ox}\n')
-            battleField()
+            battle_field()
             move = input('Формат:СтрокаСтолбец\n-> ')
             """
             Введеное значение должно соответсвовать формату: [Строка][Столбец], 
@@ -111,12 +111,12 @@ def main():
             """
             if len(move) == 2 and 0 < (int(move[0]) and int(move[1])) < 4:
                 # Результат хода.
-                game_res = battleField(move, ox)
+                game_res = battle_field(move, ox)
                 if game_res is False:
                     err = 'Вы не можете сделать ход в это поле!'
                     continue
                 elif game_res is 'Victory':
-                    clearScreen()
+                    clear_screen()
                     print(f'Победил игрок {ox}!')
                     exit()
             else:
